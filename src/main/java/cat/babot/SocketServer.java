@@ -3,7 +3,6 @@ package cat.babot;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,15 +11,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-
-import static cat.babot.Util.getCurrentTimestamp;
 
 public class SocketServer extends WebSocketServer {
     private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
-    private String lastUpdate; // Para almacenar la última actualización
-    private WeatherData weatherData = new WeatherData();
+    private final WeatherData weatherData = new WeatherData();
 
     public SocketServer(InetSocketAddress address) {
         super(address);
@@ -28,9 +23,7 @@ public class SocketServer extends WebSocketServer {
     }
 
     private void sendWeatherData() {
-        lastUpdate = getCurrentTimestamp();
         String weatherDataMsg = weatherData.getData();
-
         for (WebSocket client : getConnections()) {
             client.send(weatherDataMsg);
             logger.info("Sent weather data to {}: {}", client.getRemoteSocketAddress(), weatherDataMsg);
@@ -45,7 +38,7 @@ public class SocketServer extends WebSocketServer {
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        logger.info("Connection closed: {} - Reason: {}", conn.getRemoteSocketAddress(), reason);
+        logger.info("Connection closed: {}", conn.getRemoteSocketAddress());
     }
 
     @Override

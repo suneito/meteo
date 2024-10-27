@@ -56,10 +56,6 @@
         document.getElementById('humidity').textContent = data.humidity;
         document.getElementById('pressure').textContent = data.pressure;
         document.getElementById('measureTime').textContent = data.measureTime;
-
-<!--        const now = new Date();-->
-<!--        const timeString = now.toLocaleTimeString();-->
-<!--        document.getElementById('measure-time').textContent = `Last updated: ${timeString}`;-->
     };
 
     socket.onclose = () => {
